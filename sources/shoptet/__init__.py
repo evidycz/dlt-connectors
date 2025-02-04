@@ -3,7 +3,7 @@ from typing import Iterator
 import dlt
 from dlt.common.typing import TDataItem
 from dlt.sources import DltResource
-from helpers import build_report_url, stream_csv_file, validate_and_format_dates
+from .helpers import build_report_url, stream_csv_file, validate_and_format_dates
 
 
 @dlt.source(name="shoptet")
