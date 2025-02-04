@@ -6,7 +6,7 @@ import pandas as pd
 from dlt.common import pendulum
 from dlt.common.time import ensure_pendulum_datetime
 from dlt.pipeline.platform import requests
-from settings import SHOPTET_BASE_URL, REPORT_PARAMETERS, SHOPTET_MAX_BACKFILL_MONTHS, SHOPTET_DATE_FORMAT
+from .settings import SHOPTET_BASE_URL, REPORT_PARAMETERS, SHOPTET_MAX_BACKFILL_MONTHS, SHOPTET_DATE_FORMAT
 
 
 def build_report_url(
