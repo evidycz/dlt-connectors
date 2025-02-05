@@ -17,9 +17,6 @@ def csv_file_source(
 ) -> DltResource:
     @dlt.resource(name="csv_data", write_disposition="replace")
     def csv_data() -> Iterator[TDataItem]:
-        response = requests.get(url)
-        response.raise_for_status()
-
         with requests.get(url, stream=True) as response:
             response.raise_for_status()
 
@@ -27,7 +24,7 @@ def csv_file_source(
                 StringIO(response.text), encoding=encoding, delimiter=delimiter, chunksize=chunk_size, low_memory=False
             )
 
-            for chunk_number, chunk in enumerate(chunks):
+            for chunk in chunks:
                 for record in chunk.to_dict(orient="records"):
                     yield record
 
