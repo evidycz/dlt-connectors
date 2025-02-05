@@ -75,6 +75,6 @@ def stream_csv_file(report_url: str) -> Generator[Any, Any, None]:
             StringIO(response.text), encoding="cp1250", delimiter=";", chunksize=1024, low_memory=False
         )
 
-        for chunk_number, chunk in enumerate(chunks):
+        for chunk in chunks:
             for record in chunk.to_dict(orient="records"):
                 yield record
