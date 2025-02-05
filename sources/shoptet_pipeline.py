@@ -4,7 +4,7 @@ from shoptet import shoptet_orders_source
 
 def load_shoptet_orders_data(start_date: str, end_date: str) -> None:
     pipeline = dlt.pipeline(
-        pipeline_name="shoptet_orders",
+        pipeline_name="shoptet_pipeline",
         destination="duckdb",
         dataset_name="shoptet_orders",
     )
@@ -21,4 +21,4 @@ if __name__ == "__main__":
     end_date = "2024-01-31"
 
     load_shoptet_orders_data(start_date, end_date)
-    
+
