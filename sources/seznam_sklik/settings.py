@@ -2,7 +2,7 @@
 
 SKLIK_DATA_FORMAT = "YYYYMMDD"
 
-DEFAULT_STATS_FIELDS = [
+DEFAULT_STATS_FIELDS = (
     "id",
     "name",
     "type",
@@ -13,7 +13,7 @@ DEFAULT_STATS_FIELDS = [
     "conversions",
     "conversionValue",
     "totalMoney"
-]
+)
 
 DEFAULT_STATS_FILTER = {}
 
