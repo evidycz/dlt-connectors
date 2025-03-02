@@ -18,7 +18,6 @@ def sklik_stats_source(
     level: str = "campaigns",
     fields: Sequence[str] = DEFAULT_STATS_FIELDS,
     granularity: str = "daily",
-    restriction_filter: Dict = DEFAULT_STATS_FILTER,
     sklik_token: str = dlt.secrets.value,
     account_id: str = dlt.config.value,
 
