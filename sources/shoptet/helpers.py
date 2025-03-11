@@ -5,8 +5,9 @@ import dlt
 import pandas as pd
 from dlt.common import pendulum
 from dlt.common.time import ensure_pendulum_datetime
-from dlt.pipeline.platform import requests
-from .settings import SHOPTET_BASE_URL, REPORT_PARAMETERS, SHOPTET_MAX_BACKFILL_MONTHS, SHOPTET_DATE_FORMAT
+from dlt.sources.helpers import requests
+
+from .settings import SHOPTET_BASE_URL, REPORT_PARAMETERS, SHOPTET_DATE_FORMAT
 
 
 def build_report_url(
@@ -30,20 +31,17 @@ def build_report_url(
 
 def get_start_date(
     incremental_start_date: dlt.sources.incremental[str],
-    refresh_window_days: int = 28
+    attribution_window_days_lag: int = 28,
 ) -> pendulum.DateTime:
+    """
+    Get the start date for incremental loading of Seznam Sklik stats data.
+    """
     start_date: pendulum.DateTime = ensure_pendulum_datetime(
         incremental_start_date.start_value
-    ).subtract(days=refresh_window_days)
+    ).subtract(days=attribution_window_days_lag)
 
-    min_start_date = pendulum.today().subtract(months=SHOPTET_MAX_BACKFILL_MONTHS)
-
-    if start_date < min_start_date:
-        start_date = min_start_date
-        incremental_start_date.start_value = min_start_date
-
+    # lag the incremental start date by attribution window lag
     incremental_start_date.start_value = start_date.isoformat()
-
     return start_date
 
 
@@ -68,7 +66,7 @@ def validate_and_format_dates(
 
 
 def stream_csv_file(report_url: str) -> Generator[Any, Any, None]:
-    with requests.get(report_url, stream=True) as response:
+    with requests.get(report_url, stream=True, ) as response:
         response.raise_for_status()
 
         chunks = pd.read_csv(
