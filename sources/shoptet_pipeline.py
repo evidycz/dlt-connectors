@@ -1,24 +1,32 @@
 import dlt
 from shoptet import shoptet_orders_source
+from shoptet import shoptet_products_source
 
 
-def load_shoptet_orders_data(start_date: str, end_date: str) -> None:
+def load_shoptet_orders_data() -> None:
     pipeline = dlt.pipeline(
         pipeline_name="shoptet_pipeline",
         destination="duckdb",
         dataset_name="shoptet_orders",
     )
     load_info = pipeline.run(
-        shoptet_orders_source(start_date, end_date)
+        shoptet_orders_source()
+    )
+    print(load_info)
+
+def load_shoptet_products_data() -> None:
+    pipeline = dlt.pipeline(
+        pipeline_name="shoptet_pipeline",
+        destination="duckdb",
+        dataset_name="shoptet_products",
+    )
+    load_info = pipeline.run(
+        shoptet_products_source()
     )
     print(load_info)
 
 
 if __name__ == "__main__":
-    # Set start and end dates
-    # If you set a longer time period, the connection may be interrupted.
-    start_date = "2024-01-01"
-    end_date = "2024-01-31"
-
-    load_shoptet_orders_data(start_date, end_date)
+    # load_shoptet_orders_data()
+    load_shoptet_products_data()
 
