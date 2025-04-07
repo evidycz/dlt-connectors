@@ -18,9 +18,9 @@ def rtbhouse_source(
     advertiser_hash: Optional[str] = dlt.config.value,
     initial_load_past_days: int = 28,
     attribution_window_days_lag: int = 7,
-    group_by: Sequence[StatsGroupBy] = (StatsGroupBy.DAY,),
-    metrics: Sequence[StatsMetric] = DEFAULT_STATS,
-    conv_attribution: CountConvention = CountConvention.ATTRIBUTED_POST_CLICK,
+    # group_by: Sequence[StatsGroupBy] = (StatsGroupBy.DAY,),
+    # metrics: Sequence[StatsMetric] = DEFAULT_STATS,
+    # conv_attribution: CountConvention = CountConvention.ATTRIBUTED_POST_CLICK,
 ) -> DltResource:
     initial_load_start_date = pendulum.today().subtract(days=initial_load_past_days)
     initial_load_start_date_str = initial_load_start_date.isoformat()
@@ -36,7 +36,7 @@ def rtbhouse_source(
         for adv in advs:
             yield adv.model_dump()
 
-    @dlt.transformer(name="rtbhouse_stats", data_from=advertisers, merge_key=group_by, write_disposition="merge")
+    @dlt.transformer(name="rtbhouse_stats", data_from=advertisers, merge_key=StatsGroupBy.DAY.value, write_disposition="merge")
     def stats(
         advertiser: TDataItem,
         refresh_start_date: dlt.sources.incremental[str] = dlt.sources.incremental(
@@ -51,9 +51,9 @@ def rtbhouse_source(
                 adv_hash=advertiser["hash"],
                 day_from=start_date,
                 day_to=end_date,
-                group_by=group_by,
-                metrics=metrics,
-                count_convention=conv_attribution,
+                group_by=StatsGroupBy.DAY,
+                metrics=DEFAULT_STATS,
+                count_convention=CountConvention.ATTRIBUTED_POST_CLICK,
             )
 
         for stat in rtb_stats:
