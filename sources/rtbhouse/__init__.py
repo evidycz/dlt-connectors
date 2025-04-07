@@ -2,13 +2,12 @@ from typing import Iterator, Sequence, Optional
 
 import dlt
 from dlt.common import pendulum
-from dlt.common.typing import TDataItem, TDataItems
+from dlt.common.typing import TDataItem
 from dlt.sources import DltResource
 from rtbhouse_sdk.client import Client, BasicAuth
 from rtbhouse_sdk.schema import StatsGroupBy, StatsMetric, CountConvention
 
 from .helpers import get_start_date
-from .settings import DEFAULT_STATS
 
 
 @dlt.source(name="rtbhouse")
@@ -18,10 +17,7 @@ def rtbhouse_source(
     advertiser_hash: Optional[str] = dlt.config.value,
     initial_load_past_days: int = 28,
     attribution_window_days_lag: int = 7,
-    # group_by: Sequence[StatsGroupBy] = (StatsGroupBy.DAY,),
-    # metrics: Sequence[StatsMetric] = DEFAULT_STATS,
-    # conv_attribution: CountConvention = CountConvention.ATTRIBUTED_POST_CLICK,
-) -> DltResource:
+) -> Sequence[DltResource]:
     initial_load_start_date = pendulum.today().subtract(days=initial_load_past_days)
     initial_load_start_date_str = initial_load_start_date.isoformat()
 
@@ -51,8 +47,14 @@ def rtbhouse_source(
                 adv_hash=advertiser["hash"],
                 day_from=start_date,
                 day_to=end_date,
-                group_by=StatsGroupBy.DAY,
-                metrics=DEFAULT_STATS,
+                group_by=[StatsGroupBy.DAY],
+                metrics=[
+                    StatsMetric.IMPS_COUNT,
+                    StatsMetric.CLICKS_COUNT,
+                    StatsMetric.CAMPAIGN_COST,
+                    StatsMetric.CONVERSIONS_COUNT,
+                    StatsMetric.CONVERSIONS_VALUE,
+                ],
                 count_convention=CountConvention.ATTRIBUTED_POST_CLICK,
             )
 
